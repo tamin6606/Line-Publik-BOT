@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from googletrans import Translator
 import youtube_dl
 
-cl = LINE("taminvx6@gmail.com","virus6606")#("kambingjones1@gmail.com","virus6606")#("rookwyr@gmail.com","rookwyr111") #LINE("tesbot00@gmail.com","virus6606")
+cl = LINE("email@gmail.com","password")
 #cl = LineClient(authToken='Tokwn Luu')
 cl.log("Auth Token : " + str(cl.authToken))
 cl.log("Channel Access Token : " + str(cl.tl.channelAccessToken))
@@ -27,8 +27,8 @@ poll = OEPoll(cl)
 call = cl
 mid = cl.getProfile().mid
 creator = ["u1fd54a385224a0f266e4149912cedc73"]
-owner = ["u1fd54a385224a0f266e4149912cedc73","u43c691b28b28231fbf3e39785fa644af"]
-admin = ["u1fd54a385224a0f266e4149912cedc73","u43c691b28b28231fbf3e39785fa644af"]
+owner = ["u1fd54a385224a0f266e4149912cedc73"]
+admin = ["u1fd54a385224a0f266e4149912cedc73"]
 staff = ["u49f833aa6422db25eda1166317cd7789"]
 Amid = Bmid = Cmid = Zmid =  mid
 KAC = [cl]
