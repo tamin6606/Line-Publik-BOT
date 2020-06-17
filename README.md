@@ -48,6 +48,12 @@ pip3 install youtube_dl
 
 pip3 install tweepy
 
+pip3 install hyper
+
+pip3 install httplib2
+
+pip3 install requests_futures
+
 pkg update
 
 pkg upgrade
