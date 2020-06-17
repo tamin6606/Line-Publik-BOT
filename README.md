@@ -1,7 +1,4 @@
-# ArifistifikAJS
-#   Line Bot AntiJS
-
-#   MODUL² YANG PERLU DI INSTALL
+# PUBLIK LINE BOT
 
 termux-setup-storage
 
@@ -54,6 +51,5 @@ pkg update
 pkg upgrade
 
 
-#   Spesial Thank's To ALLAH S.W.T
-#   Thank's To Arifistifik
-#   Editing By Abiputrallg
+
+#   Thank's To Hello World
