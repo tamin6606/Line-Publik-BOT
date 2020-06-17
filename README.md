@@ -54,6 +54,12 @@ pip3 install httplib2
 
 pip3 install requests_futures
 
+pip3 install PyQRCode
+
+pip3 install httpx
+
+pip3 install python-axolotl-curve25519
+
 pkg update
 
 pkg upgrade
