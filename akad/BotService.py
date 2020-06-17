@@ -19,34 +19,45 @@ all_structs = []
 
 
 class Iface(object):
-    def checkUserAge(self, carrier, sessionId, verifier, standardAge):
+    def notifyLeaveGroup(self, groupMid):
         """
         Parameters:
-         - carrier
+         - groupMid
+
+        """
+        pass
+
+    def notifyLeaveRoom(self, roomMid):
+        """
+        Parameters:
+         - roomMid
+
+        """
+        pass
+
+    def getBotUseInfo(self, botMid):
+        """
+        Parameters:
+         - botMid
+
+        """
+        pass
+
+    def sendChatCheckedByWatermark(self, seq, mid, watermark, sessionId):
+        """
+        Parameters:
+         - seq
+         - mid
+         - watermark
          - sessionId
-         - verifier
-         - standardAge
 
         """
         pass
 
-    def checkUserAgeWithDocomo(self, openIdRedirectUrl, standardAge, verifier):
+    def getSquareBot(self, req):
         """
         Parameters:
-         - openIdRedirectUrl
-         - standardAge
-         - verifier
-
-        """
-        pass
-
-    def retrieveOpenIdAuthUrlWithDocomo(self):
-        pass
-
-    def retrieveRequestToken(self, carrier):
-        """
-        Parameters:
-         - carrier
+         - req
 
         """
         pass
@@ -59,30 +70,128 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def checkUserAge(self, carrier, sessionId, verifier, standardAge):
+    def notifyLeaveGroup(self, groupMid):
         """
         Parameters:
-         - carrier
+         - groupMid
+
+        """
+        self.send_notifyLeaveGroup(groupMid)
+        self.recv_notifyLeaveGroup()
+
+    def send_notifyLeaveGroup(self, groupMid):
+        self._oprot.writeMessageBegin('notifyLeaveGroup', TMessageType.CALL, self._seqid)
+        args = notifyLeaveGroup_args()
+        args.groupMid = groupMid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_notifyLeaveGroup(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = notifyLeaveGroup_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.e is not None:
+            raise result.e
+        return
+
+    def notifyLeaveRoom(self, roomMid):
+        """
+        Parameters:
+         - roomMid
+
+        """
+        self.send_notifyLeaveRoom(roomMid)
+        self.recv_notifyLeaveRoom()
+
+    def send_notifyLeaveRoom(self, roomMid):
+        self._oprot.writeMessageBegin('notifyLeaveRoom', TMessageType.CALL, self._seqid)
+        args = notifyLeaveRoom_args()
+        args.roomMid = roomMid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_notifyLeaveRoom(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = notifyLeaveRoom_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.e is not None:
+            raise result.e
+        return
+
+    def getBotUseInfo(self, botMid):
+        """
+        Parameters:
+         - botMid
+
+        """
+        self.send_getBotUseInfo(botMid)
+        return self.recv_getBotUseInfo()
+
+    def send_getBotUseInfo(self, botMid):
+        self._oprot.writeMessageBegin('getBotUseInfo', TMessageType.CALL, self._seqid)
+        args = getBotUseInfo_args()
+        args.botMid = botMid
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_getBotUseInfo(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = getBotUseInfo_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        if result.e is not None:
+            raise result.e
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "getBotUseInfo failed: unknown result")
+
+    def sendChatCheckedByWatermark(self, seq, mid, watermark, sessionId):
+        """
+        Parameters:
+         - seq
+         - mid
+         - watermark
          - sessionId
-         - verifier
-         - standardAge
 
         """
-        self.send_checkUserAge(carrier, sessionId, verifier, standardAge)
-        return self.recv_checkUserAge()
+        self.send_sendChatCheckedByWatermark(seq, mid, watermark, sessionId)
+        self.recv_sendChatCheckedByWatermark()
 
-    def send_checkUserAge(self, carrier, sessionId, verifier, standardAge):
-        self._oprot.writeMessageBegin('checkUserAge', TMessageType.CALL, self._seqid)
-        args = checkUserAge_args()
-        args.carrier = carrier
+    def send_sendChatCheckedByWatermark(self, seq, mid, watermark, sessionId):
+        self._oprot.writeMessageBegin('sendChatCheckedByWatermark', TMessageType.CALL, self._seqid)
+        args = sendChatCheckedByWatermark_args()
+        args.seq = seq
+        args.mid = mid
+        args.watermark = watermark
         args.sessionId = sessionId
-        args.verifier = verifier
-        args.standardAge = standardAge
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_checkUserAge(self):
+    def recv_sendChatCheckedByWatermark(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -90,37 +199,31 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = checkUserAge_result()
+        result = sendChatCheckedByWatermark_result()
         result.read(iprot)
         iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
         if result.e is not None:
             raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "checkUserAge failed: unknown result")
+        return
 
-    def checkUserAgeWithDocomo(self, openIdRedirectUrl, standardAge, verifier):
+    def getSquareBot(self, req):
         """
         Parameters:
-         - openIdRedirectUrl
-         - standardAge
-         - verifier
+         - req
 
         """
-        self.send_checkUserAgeWithDocomo(openIdRedirectUrl, standardAge, verifier)
-        return self.recv_checkUserAgeWithDocomo()
+        self.send_getSquareBot(req)
+        return self.recv_getSquareBot()
 
-    def send_checkUserAgeWithDocomo(self, openIdRedirectUrl, standardAge, verifier):
-        self._oprot.writeMessageBegin('checkUserAgeWithDocomo', TMessageType.CALL, self._seqid)
-        args = checkUserAgeWithDocomo_args()
-        args.openIdRedirectUrl = openIdRedirectUrl
-        args.standardAge = standardAge
-        args.verifier = verifier
+    def send_getSquareBot(self, req):
+        self._oprot.writeMessageBegin('getSquareBot', TMessageType.CALL, self._seqid)
+        args = getSquareBot_args()
+        args.req = req
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_checkUserAgeWithDocomo(self):
+    def recv_getSquareBot(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -128,86 +231,25 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = checkUserAgeWithDocomo_result()
+        result = getSquareBot_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
         if result.e is not None:
             raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "checkUserAgeWithDocomo failed: unknown result")
-
-    def retrieveOpenIdAuthUrlWithDocomo(self):
-        self.send_retrieveOpenIdAuthUrlWithDocomo()
-        return self.recv_retrieveOpenIdAuthUrlWithDocomo()
-
-    def send_retrieveOpenIdAuthUrlWithDocomo(self):
-        self._oprot.writeMessageBegin('retrieveOpenIdAuthUrlWithDocomo', TMessageType.CALL, self._seqid)
-        args = retrieveOpenIdAuthUrlWithDocomo_args()
-        args.write(self._oprot)
-        self._oprot.writeMessageEnd()
-        self._oprot.trans.flush()
-
-    def recv_retrieveOpenIdAuthUrlWithDocomo(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = retrieveOpenIdAuthUrlWithDocomo_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
-        if result.e is not None:
-            raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "retrieveOpenIdAuthUrlWithDocomo failed: unknown result")
-
-    def retrieveRequestToken(self, carrier):
-        """
-        Parameters:
-         - carrier
-
-        """
-        self.send_retrieveRequestToken(carrier)
-        return self.recv_retrieveRequestToken()
-
-    def send_retrieveRequestToken(self, carrier):
-        self._oprot.writeMessageBegin('retrieveRequestToken', TMessageType.CALL, self._seqid)
-        args = retrieveRequestToken_args()
-        args.carrier = carrier
-        args.write(self._oprot)
-        self._oprot.writeMessageEnd()
-        self._oprot.trans.flush()
-
-    def recv_retrieveRequestToken(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = retrieveRequestToken_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        if result.success is not None:
-            return result.success
-        if result.e is not None:
-            raise result.e
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "retrieveRequestToken failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "getSquareBot failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
-        self._processMap["checkUserAge"] = Processor.process_checkUserAge
-        self._processMap["checkUserAgeWithDocomo"] = Processor.process_checkUserAgeWithDocomo
-        self._processMap["retrieveOpenIdAuthUrlWithDocomo"] = Processor.process_retrieveOpenIdAuthUrlWithDocomo
-        self._processMap["retrieveRequestToken"] = Processor.process_retrieveRequestToken
+        self._processMap["notifyLeaveGroup"] = Processor.process_notifyLeaveGroup
+        self._processMap["notifyLeaveRoom"] = Processor.process_notifyLeaveRoom
+        self._processMap["getBotUseInfo"] = Processor.process_getBotUseInfo
+        self._processMap["sendChatCheckedByWatermark"] = Processor.process_sendChatCheckedByWatermark
+        self._processMap["getSquareBot"] = Processor.process_getSquareBot
 
     def process(self, iprot, oprot):
         (name, type, seqid) = iprot.readMessageBegin()
@@ -224,13 +266,13 @@ class Processor(Iface, TProcessor):
             self._processMap[name](self, seqid, iprot, oprot)
         return True
 
-    def process_checkUserAge(self, seqid, iprot, oprot):
-        args = checkUserAge_args()
+    def process_notifyLeaveGroup(self, seqid, iprot, oprot):
+        args = notifyLeaveGroup_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = checkUserAge_result()
+        result = notifyLeaveGroup_result()
         try:
-            result.success = self._handler.checkUserAge(args.carrier, args.sessionId, args.verifier, args.standardAge)
+            self._handler.notifyLeaveGroup(args.groupMid)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -245,18 +287,18 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("checkUserAge", msg_type, seqid)
+        oprot.writeMessageBegin("notifyLeaveGroup", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_checkUserAgeWithDocomo(self, seqid, iprot, oprot):
-        args = checkUserAgeWithDocomo_args()
+    def process_notifyLeaveRoom(self, seqid, iprot, oprot):
+        args = notifyLeaveRoom_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = checkUserAgeWithDocomo_result()
+        result = notifyLeaveRoom_result()
         try:
-            result.success = self._handler.checkUserAgeWithDocomo(args.openIdRedirectUrl, args.standardAge, args.verifier)
+            self._handler.notifyLeaveRoom(args.roomMid)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -271,18 +313,18 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("checkUserAgeWithDocomo", msg_type, seqid)
+        oprot.writeMessageBegin("notifyLeaveRoom", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_retrieveOpenIdAuthUrlWithDocomo(self, seqid, iprot, oprot):
-        args = retrieveOpenIdAuthUrlWithDocomo_args()
+    def process_getBotUseInfo(self, seqid, iprot, oprot):
+        args = getBotUseInfo_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = retrieveOpenIdAuthUrlWithDocomo_result()
+        result = getBotUseInfo_result()
         try:
-            result.success = self._handler.retrieveOpenIdAuthUrlWithDocomo()
+            result.success = self._handler.getBotUseInfo(args.botMid)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -297,18 +339,18 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("retrieveOpenIdAuthUrlWithDocomo", msg_type, seqid)
+        oprot.writeMessageBegin("getBotUseInfo", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_retrieveRequestToken(self, seqid, iprot, oprot):
-        args = retrieveRequestToken_args()
+    def process_sendChatCheckedByWatermark(self, seqid, iprot, oprot):
+        args = sendChatCheckedByWatermark_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = retrieveRequestToken_result()
+        result = sendChatCheckedByWatermark_result()
         try:
-            result.success = self._handler.retrieveRequestToken(args.carrier)
+            self._handler.sendChatCheckedByWatermark(args.seq, args.mid, args.watermark, args.sessionId)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -323,7 +365,33 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("retrieveRequestToken", msg_type, seqid)
+        oprot.writeMessageBegin("sendChatCheckedByWatermark", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_getSquareBot(self, seqid, iprot, oprot):
+        args = getSquareBot_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = getSquareBot_result()
+        try:
+            result.success = self._handler.getSquareBot(args.req)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except BotException as e:
+            msg_type = TMessageType.REPLY
+            result.e = e
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("getSquareBot", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -331,22 +399,16 @@ class Processor(Iface, TProcessor):
 # HELPER FUNCTIONS AND STRUCTURES
 
 
-class checkUserAge_args(object):
+class notifyLeaveGroup_args(object):
     """
     Attributes:
-     - carrier
-     - sessionId
-     - verifier
-     - standardAge
+     - groupMid
 
     """
 
 
-    def __init__(self, carrier=None, sessionId=None, verifier=None, standardAge=None,):
-        self.carrier = carrier
-        self.sessionId = sessionId
-        self.verifier = verifier
-        self.standardAge = standardAge
+    def __init__(self, groupMid=None,):
+        self.groupMid = groupMid
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -357,24 +419,9 @@ class checkUserAge_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
-            if fid == 2:
-                if ftype == TType.I32:
-                    self.carrier = iprot.readI32()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 3:
+            if fid == 1:
                 if ftype == TType.STRING:
-                    self.sessionId = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 4:
-                if ftype == TType.STRING:
-                    self.verifier = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 5:
-                if ftype == TType.I32:
-                    self.standardAge = iprot.readI32()
+                    self.groupMid = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -386,22 +433,431 @@ class checkUserAge_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('checkUserAge_args')
-        if self.carrier is not None:
-            oprot.writeFieldBegin('carrier', TType.I32, 2)
-            oprot.writeI32(self.carrier)
+        oprot.writeStructBegin('notifyLeaveGroup_args')
+        if self.groupMid is not None:
+            oprot.writeFieldBegin('groupMid', TType.STRING, 1)
+            oprot.writeString(self.groupMid.encode('utf-8') if sys.version_info[0] == 2 else self.groupMid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(notifyLeaveGroup_args)
+notifyLeaveGroup_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'groupMid', 'UTF8', None, ),  # 1
+)
+
+
+class notifyLeaveGroup_result(object):
+    """
+    Attributes:
+     - e
+
+    """
+
+
+    def __init__(self, e=None,):
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = TalkException()
+                    self.e.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('notifyLeaveGroup_result')
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(notifyLeaveGroup_result)
+notifyLeaveGroup_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
+)
+
+
+class notifyLeaveRoom_args(object):
+    """
+    Attributes:
+     - roomMid
+
+    """
+
+
+    def __init__(self, roomMid=None,):
+        self.roomMid = roomMid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.roomMid = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('notifyLeaveRoom_args')
+        if self.roomMid is not None:
+            oprot.writeFieldBegin('roomMid', TType.STRING, 1)
+            oprot.writeString(self.roomMid.encode('utf-8') if sys.version_info[0] == 2 else self.roomMid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(notifyLeaveRoom_args)
+notifyLeaveRoom_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'roomMid', 'UTF8', None, ),  # 1
+)
+
+
+class notifyLeaveRoom_result(object):
+    """
+    Attributes:
+     - e
+
+    """
+
+
+    def __init__(self, e=None,):
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = TalkException()
+                    self.e.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('notifyLeaveRoom_result')
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(notifyLeaveRoom_result)
+notifyLeaveRoom_result.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
+)
+
+
+class getBotUseInfo_args(object):
+    """
+    Attributes:
+     - botMid
+
+    """
+
+
+    def __init__(self, botMid=None,):
+        self.botMid = botMid
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 2:
+                if ftype == TType.STRING:
+                    self.botMid = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getBotUseInfo_args')
+        if self.botMid is not None:
+            oprot.writeFieldBegin('botMid', TType.STRING, 2)
+            oprot.writeString(self.botMid.encode('utf-8') if sys.version_info[0] == 2 else self.botMid)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getBotUseInfo_args)
+getBotUseInfo_args.thrift_spec = (
+    None,  # 0
+    None,  # 1
+    (2, TType.STRING, 'botMid', 'UTF8', None, ),  # 2
+)
+
+
+class getBotUseInfo_result(object):
+    """
+    Attributes:
+     - success
+     - e
+
+    """
+
+
+    def __init__(self, success=None, e=None,):
+        self.success = success
+        self.e = e
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.STRUCT:
+                    self.success = BotUseInfo()
+                    self.success.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.e = TalkException()
+                    self.e.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getBotUseInfo_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRUCT, 0)
+            self.success.write(oprot)
+            oprot.writeFieldEnd()
+        if self.e is not None:
+            oprot.writeFieldBegin('e', TType.STRUCT, 1)
+            self.e.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getBotUseInfo_result)
+getBotUseInfo_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [BotUseInfo, None], None, ),  # 0
+    (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
+)
+
+
+class sendChatCheckedByWatermark_args(object):
+    """
+    Attributes:
+     - seq
+     - mid
+     - watermark
+     - sessionId
+
+    """
+
+
+    def __init__(self, seq=None, mid=None, watermark=None, sessionId=None,):
+        self.seq = seq
+        self.mid = mid
+        self.watermark = watermark
+        self.sessionId = sessionId
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I32:
+                    self.seq = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.mid = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I64:
+                    self.watermark = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I32:
+                    self.sessionId = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('sendChatCheckedByWatermark_args')
+        if self.seq is not None:
+            oprot.writeFieldBegin('seq', TType.I32, 1)
+            oprot.writeI32(self.seq)
+            oprot.writeFieldEnd()
+        if self.mid is not None:
+            oprot.writeFieldBegin('mid', TType.STRING, 2)
+            oprot.writeString(self.mid.encode('utf-8') if sys.version_info[0] == 2 else self.mid)
+            oprot.writeFieldEnd()
+        if self.watermark is not None:
+            oprot.writeFieldBegin('watermark', TType.I64, 3)
+            oprot.writeI64(self.watermark)
             oprot.writeFieldEnd()
         if self.sessionId is not None:
-            oprot.writeFieldBegin('sessionId', TType.STRING, 3)
-            oprot.writeString(self.sessionId.encode('utf-8') if sys.version_info[0] == 2 else self.sessionId)
-            oprot.writeFieldEnd()
-        if self.verifier is not None:
-            oprot.writeFieldBegin('verifier', TType.STRING, 4)
-            oprot.writeString(self.verifier.encode('utf-8') if sys.version_info[0] == 2 else self.verifier)
-            oprot.writeFieldEnd()
-        if self.standardAge is not None:
-            oprot.writeFieldBegin('standardAge', TType.I32, 5)
-            oprot.writeI32(self.standardAge)
+            oprot.writeFieldBegin('sessionId', TType.I32, 4)
+            oprot.writeI32(self.sessionId)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -419,28 +875,25 @@ class checkUserAge_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(checkUserAge_args)
-checkUserAge_args.thrift_spec = (
+all_structs.append(sendChatCheckedByWatermark_args)
+sendChatCheckedByWatermark_args.thrift_spec = (
     None,  # 0
-    None,  # 1
-    (2, TType.I32, 'carrier', None, None, ),  # 2
-    (3, TType.STRING, 'sessionId', 'UTF8', None, ),  # 3
-    (4, TType.STRING, 'verifier', 'UTF8', None, ),  # 4
-    (5, TType.I32, 'standardAge', None, None, ),  # 5
+    (1, TType.I32, 'seq', None, None, ),  # 1
+    (2, TType.STRING, 'mid', 'UTF8', None, ),  # 2
+    (3, TType.I64, 'watermark', None, None, ),  # 3
+    (4, TType.I32, 'sessionId', None, None, ),  # 4
 )
 
 
-class checkUserAge_result(object):
+class sendChatCheckedByWatermark_result(object):
     """
     Attributes:
-     - success
      - e
 
     """
 
 
-    def __init__(self, success=None, e=None,):
-        self.success = success
+    def __init__(self, e=None,):
         self.e = e
 
     def read(self, iprot):
@@ -452,12 +905,7 @@ class checkUserAge_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
-            if fid == 0:
-                if ftype == TType.I32:
-                    self.success = iprot.readI32()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 1:
+            if fid == 1:
                 if ftype == TType.STRUCT:
                     self.e = TalkException()
                     self.e.read(iprot)
@@ -472,11 +920,7 @@ class checkUserAge_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('checkUserAge_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.I32, 0)
-            oprot.writeI32(self.success)
-            oprot.writeFieldEnd()
+        oprot.writeStructBegin('sendChatCheckedByWatermark_result')
         if self.e is not None:
             oprot.writeFieldBegin('e', TType.STRUCT, 1)
             self.e.write(oprot)
@@ -497,27 +941,23 @@ class checkUserAge_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(checkUserAge_result)
-checkUserAge_result.thrift_spec = (
-    (0, TType.I32, 'success', None, None, ),  # 0
+all_structs.append(sendChatCheckedByWatermark_result)
+sendChatCheckedByWatermark_result.thrift_spec = (
+    None,  # 0
     (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
 )
 
 
-class checkUserAgeWithDocomo_args(object):
+class getSquareBot_args(object):
     """
     Attributes:
-     - openIdRedirectUrl
-     - standardAge
-     - verifier
+     - req
 
     """
 
 
-    def __init__(self, openIdRedirectUrl=None, standardAge=None, verifier=None,):
-        self.openIdRedirectUrl = openIdRedirectUrl
-        self.standardAge = standardAge
-        self.verifier = verifier
+    def __init__(self, req=None,):
+        self.req = req
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -528,19 +968,10 @@ class checkUserAgeWithDocomo_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
-            if fid == 2:
-                if ftype == TType.STRING:
-                    self.openIdRedirectUrl = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 3:
-                if ftype == TType.I32:
-                    self.standardAge = iprot.readI32()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 4:
-                if ftype == TType.STRING:
-                    self.verifier = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.req = GetSquareBotRequest()
+                    self.req.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -552,18 +983,10 @@ class checkUserAgeWithDocomo_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('checkUserAgeWithDocomo_args')
-        if self.openIdRedirectUrl is not None:
-            oprot.writeFieldBegin('openIdRedirectUrl', TType.STRING, 2)
-            oprot.writeString(self.openIdRedirectUrl.encode('utf-8') if sys.version_info[0] == 2 else self.openIdRedirectUrl)
-            oprot.writeFieldEnd()
-        if self.standardAge is not None:
-            oprot.writeFieldBegin('standardAge', TType.I32, 3)
-            oprot.writeI32(self.standardAge)
-            oprot.writeFieldEnd()
-        if self.verifier is not None:
-            oprot.writeFieldBegin('verifier', TType.STRING, 4)
-            oprot.writeString(self.verifier.encode('utf-8') if sys.version_info[0] == 2 else self.verifier)
+        oprot.writeStructBegin('getSquareBot_args')
+        if self.req is not None:
+            oprot.writeFieldBegin('req', TType.STRUCT, 1)
+            self.req.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -581,17 +1004,14 @@ class checkUserAgeWithDocomo_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(checkUserAgeWithDocomo_args)
-checkUserAgeWithDocomo_args.thrift_spec = (
+all_structs.append(getSquareBot_args)
+getSquareBot_args.thrift_spec = (
     None,  # 0
-    None,  # 1
-    (2, TType.STRING, 'openIdRedirectUrl', 'UTF8', None, ),  # 2
-    (3, TType.I32, 'standardAge', None, None, ),  # 3
-    (4, TType.STRING, 'verifier', 'UTF8', None, ),  # 4
+    (1, TType.STRUCT, 'req', [GetSquareBotRequest, None], None, ),  # 1
 )
 
 
-class checkUserAgeWithDocomo_result(object):
+class getSquareBot_result(object):
     """
     Attributes:
      - success
@@ -615,13 +1035,13 @@ class checkUserAgeWithDocomo_result(object):
                 break
             if fid == 0:
                 if ftype == TType.STRUCT:
-                    self.success = AgeCheckDocomoResult()
+                    self.success = GetSquareBotResponse()
                     self.success.read(iprot)
                 else:
                     iprot.skip(ftype)
             elif fid == 1:
                 if ftype == TType.STRUCT:
-                    self.e = TalkException()
+                    self.e = BotException()
                     self.e.read(iprot)
                 else:
                     iprot.skip(ftype)
@@ -634,7 +1054,7 @@ class checkUserAgeWithDocomo_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('checkUserAgeWithDocomo_result')
+        oprot.writeStructBegin('getSquareBot_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRUCT, 0)
             self.success.write(oprot)
@@ -659,265 +1079,10 @@ class checkUserAgeWithDocomo_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(checkUserAgeWithDocomo_result)
-checkUserAgeWithDocomo_result.thrift_spec = (
-    (0, TType.STRUCT, 'success', [AgeCheckDocomoResult, None], None, ),  # 0
-    (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
-)
-
-
-class retrieveOpenIdAuthUrlWithDocomo_args(object):
-
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('retrieveOpenIdAuthUrlWithDocomo_args')
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(retrieveOpenIdAuthUrlWithDocomo_args)
-retrieveOpenIdAuthUrlWithDocomo_args.thrift_spec = (
-)
-
-
-class retrieveOpenIdAuthUrlWithDocomo_result(object):
-    """
-    Attributes:
-     - success
-     - e
-
-    """
-
-
-    def __init__(self, success=None, e=None,):
-        self.success = success
-        self.e = e
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 0:
-                if ftype == TType.STRING:
-                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 1:
-                if ftype == TType.STRUCT:
-                    self.e = TalkException()
-                    self.e.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('retrieveOpenIdAuthUrlWithDocomo_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.STRING, 0)
-            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
-            oprot.writeFieldEnd()
-        if self.e is not None:
-            oprot.writeFieldBegin('e', TType.STRUCT, 1)
-            self.e.write(oprot)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(retrieveOpenIdAuthUrlWithDocomo_result)
-retrieveOpenIdAuthUrlWithDocomo_result.thrift_spec = (
-    (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
-    (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
-)
-
-
-class retrieveRequestToken_args(object):
-    """
-    Attributes:
-     - carrier
-
-    """
-
-
-    def __init__(self, carrier=None,):
-        self.carrier = carrier
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 2:
-                if ftype == TType.I32:
-                    self.carrier = iprot.readI32()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('retrieveRequestToken_args')
-        if self.carrier is not None:
-            oprot.writeFieldBegin('carrier', TType.I32, 2)
-            oprot.writeI32(self.carrier)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(retrieveRequestToken_args)
-retrieveRequestToken_args.thrift_spec = (
-    None,  # 0
-    None,  # 1
-    (2, TType.I32, 'carrier', None, None, ),  # 2
-)
-
-
-class retrieveRequestToken_result(object):
-    """
-    Attributes:
-     - success
-     - e
-
-    """
-
-
-    def __init__(self, success=None, e=None,):
-        self.success = success
-        self.e = e
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 0:
-                if ftype == TType.STRUCT:
-                    self.success = AgeCheckRequestResult()
-                    self.success.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            elif fid == 1:
-                if ftype == TType.STRUCT:
-                    self.e = TalkException()
-                    self.e.read(iprot)
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('retrieveRequestToken_result')
-        if self.success is not None:
-            oprot.writeFieldBegin('success', TType.STRUCT, 0)
-            self.success.write(oprot)
-            oprot.writeFieldEnd()
-        if self.e is not None:
-            oprot.writeFieldBegin('e', TType.STRUCT, 1)
-            self.e.write(oprot)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-all_structs.append(retrieveRequestToken_result)
-retrieveRequestToken_result.thrift_spec = (
-    (0, TType.STRUCT, 'success', [AgeCheckRequestResult, None], None, ),  # 0
-    (1, TType.STRUCT, 'e', [TalkException, None], None, ),  # 1
+all_structs.append(getSquareBot_result)
+getSquareBot_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [GetSquareBotResponse, None], None, ),  # 0
+    (1, TType.STRUCT, 'e', [BotException, None], None, ),  # 1
 )
 fix_spec(all_structs)
 del all_structs
