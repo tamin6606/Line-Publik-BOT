@@ -6,6 +6,8 @@ cd storage && cd downloads
 
 pkg install git
 
+git clone https://github.com/tamin6606/Line-Publik-BOT
+
 pkg install nano
 
 pkg install nodejs
@@ -49,6 +51,15 @@ pip3 install tweepy
 pkg update
 
 pkg upgrade
+
+cd Line-Publik-BOT
+
+python3 botbc.py
+
+# =============================
+# * Jangan Lupa Edit botbc.py
+# * Isi Email & Pass
+# =============================
 
 
 
