@@ -1,0 +1,5 @@
+PyQRCode
+akad
+python-magic
+requests
+rsa
