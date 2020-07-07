@@ -33,33 +33,33 @@ class Config(object):
     }
 
     APP_VERSION = {
-        'ANDROID': '10.8.3',
-        'IOS': '10.8.0',
+        'ANDROID': '10.10.1',
+        'IOS': '10.10.0',
         'ANDROIDLITE': '2.14.0',
-        'DESKTOPWIN': '6.0.3',
+        'DESKTOPWIN': '6.1.0',
         'DESKTOPMAC': '6.0.3',
-        'IOSIPAD': '10.8.0',
+        'IOSIPAD': '10.10.0',
         'CHROMEOS': '2.3.8',
-        'DEFAULT': '10.6.5'
+        'DEFAULT': '10.9.0'
     }
 
     SYSTEM_VERSION = {
         'ANDROID': '10.0',
-        'IOS': '13.4.1',
+        'IOS': '13.5.1',
         'ANDROIDLITE': '10.0',
         'DESKTOPWIN': '10.0',
         'DESKTOPMAC': '10.15.1',
-        'IOSIPAD': '13.4.1',
-        'CHROMEOS': '81.0',
+        'IOSIPAD': '13.5.1',
+        'CHROMEOS': '83.0',
         'DEFAULT': '10.0'
     }
 
     APP_TYPE    = 'DESKTOPWIN'
-    APP_VER     = APP_VERSION[APP_TYPE] if APP_TYPE in APP_VERSION else APP_VERSION['DEFAULT']
+    APP_VER     = APP_VERSION[APP_TYPE] if APP_TYPE in APP_VERSION else APP_VERSION['DESKTOPWIN']
     CARRIER     = '51089, 1-0'
-    SYSTEM_NAME = 'FDLRCN'
-    SYSTEM_VER  = SYSTEM_VERSION[APP_TYPE] if APP_TYPE in SYSTEM_VERSION else SYSTEM_VERSION['DEFAULT']
-    IP_ADDR     = '8.8.8.8'
+    SYSTEM_NAME = 'DESKTOPWIN'
+    SYSTEM_VER  = SYSTEM_VERSION[APP_TYPE] if APP_TYPE in SYSTEM_VERSION else SYSTEM_VERSION['DESKTOPWIN']
+    IP_ADDR     = '1.1.1.1'
     EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
     URL_REGEX   = re.compile(r'^(?:http|ftp)s?://' r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' r'localhost|' r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' r'(?::\d+)?' r'(?:/?|[/?]\S+)$', re.IGNORECASE)
     MID_REGEX   = re.compile(r'u[a-f0-9]{32}')
@@ -70,6 +70,6 @@ class Config(object):
     def __init__(self, appType=None):
         if appType:
             self.APP_TYPE = appType
-            self.APP_VER = self.APP_VERSION[self.APP_TYPE] if self.APP_TYPE in self.APP_VERSION else self.APP_VERSION['DEFAULT']
+            self.APP_VER = self.APP_VERSION[self.APP_TYPE] if self.APP_TYPE in self.APP_VERSION else self.APP_VERSION['DESKTOPWIN']
         self.APP_NAME = '%s\t%s\t%s\t%s' % (self.APP_TYPE, self.APP_VER, self.SYSTEM_NAME, self.SYSTEM_VER)
         self.USER_AGENT = 'Line/%s' % self.APP_VER

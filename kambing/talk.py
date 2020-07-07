@@ -246,7 +246,7 @@ class Talk(object):
     def sendMentionV2(self, to, text="", mids=[], isUnicode=False):
         arrData = ""
         arr = []
-        mention = "@zeroxyuuki "
+        mention = "@Kambing "
         if mids == []:
             raise Exception("Invalid mids")
         if "@!" in text:
