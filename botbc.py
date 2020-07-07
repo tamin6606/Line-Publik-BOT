@@ -16,10 +16,13 @@ from bs4 import BeautifulSoup
 from googletrans import Translator
 import youtube_dl
 
-cl = LINE("email@gmail.com","password")
+cl = LINE("email","password")
 #cl = LineClient(authToken='Tokwn Luu')
 cl.log("Auth Token : " + str(cl.authToken))
-cl.log("Channel Access Token : " + str(cl.tl.channelAccessToken))
+#cl.log("Channel Access Token : " + str(cl.tl.channelAccessToken))
+channel = Channel(cl, cl.server.CHANNEL_ID['LINE_TIMELINE'])
+channelToken = channel.getChannelResult()
+cl.log("Channel Token : " + str(channelToken))
 
 print ("KAMBING SQUAD")
 
@@ -27,8 +30,8 @@ poll = OEPoll(cl)
 call = cl
 mid = cl.getProfile().mid
 creator = ["u1fd54a385224a0f266e4149912cedc73"]
-owner = ["u1fd54a385224a0f266e4149912cedc73"]
-admin = ["u1fd54a385224a0f266e4149912cedc73"]
+owner = ["u1fd54a385224a0f266e4149912cedc73","u74f86917bb603eea295b91067d1f793c"]
+admin = ["u1fd54a385224a0f266e4149912cedc73","u74f86917bb603eea295b91067d1f793c"]
 staff = ["u49f833aa6422db25eda1166317cd7789"]
 Amid = Bmid = Cmid = Zmid =  mid
 KAC = [cl]
@@ -351,28 +354,17 @@ def welcomeMembers(to, mid):
     except Exception as error:
         cl.sendMessage(to, "[ INFO ] Error :\n" + str(error))
 
-def sendMention(to, mid, firstmessage):
+def sendMention(to, mid, firstmessage, lastmessage):
     try:
         arrData = ""
         text = "%s " %(str(firstmessage))
         arr = []
-        mention = "@x \n"
+        mention = "@Mbing\n "
         slen = str(len(text))
         elen = str(len(text) + len(mention) - 1)
         arrData = {'S':slen, 'E':elen, 'M':mid}
         arr.append(arrData)
-        today = datetime.today()
-        future = datetime(2021,3,1)
-        hari = (str(future - today))
-        comma = hari.find(",")
-        hari = hari[:comma]
-        teman = cl.getAllContactIds()
-        gid = cl.getGroupIdsJoined()
-        tz = pytz.timezone("Asia/Jakarta")
-        timeNow = datetime.now(tz=tz)
-        eltime = time.time() - mulai
-        bot = runtime(eltime)
-        text += mention
+        text += mention + str(lastmessage)
         cl.sendMessage(to, text, {'MENTION': str('{"MENTIONEES":' + json.dumps(arr) + '}')}, 0)
     except Exception as error:
         cl.sendMessage(to, "[ INFO ] Error :\n" + str(error))
@@ -386,10 +378,14 @@ def command(text):
     return cmd
 
 kont = "u49f833aa6422db25eda1166317cd7789"
+adm1 = "u1fd54a385224a0f266e4149912cedc73"
+adm2 = "u74f86917bb603eea295b91067d1f793c"
+cl.findAndAddContactsByMid(adm1)
+#cl.findAndAddContactsByMid(adm2)
 cl.findAndAddContactsByMid(kont)
-cl.sendMessage(kont,"Autoadd on")
-cl.sendMessage(kont,"Autojoin on")
-cl.sendMessage(kont,"Jointicket on")
+#cl.sendMessage(kont,"Autoadd on")
+#cl.sendMessage(kont,"Autojoin on")
+#cl.sendMessage(kont,"Jointicket on")
 
 def help():
     key = Setmain["keyCommand"]
@@ -457,7 +453,7 @@ def bot(op):
         if op.type == 0:
             return
         
-        if op.type == 11:
+        if op.type == 11 or  op.type == 122:
             if op.param1 in protectqr:
                 try:
                     if cl.getGroup(op.param1).preventedJoinByTicket == False:
@@ -470,7 +466,7 @@ def bot(op):
                 except:
                     pass
 
-        #if op.type == 13:
+        #if op.type == 13 or op.type == 124:
         #    if mid in op.param3:
         #        if wait["autoLeave"] == True:
         #            if op.param2 not in Bots and op.param2 not in owner and op.param2 not in admin and op.param2 not in staff:
@@ -483,7 +479,7 @@ def bot(op):
         #                ginfo = cl.getGroup(op.param1)
         #                cl.sendMessage(op.param1,"Hai " + str(ginfo.name))
 
-        if op.type == 13:
+        if op.type == 13 or op.type == 124:
             if mid in op.param3:
                 if wait["autoJoin"] == True:
                     ginfo = cl.getGroup(op.param1)
@@ -492,7 +488,7 @@ def bot(op):
                 else:
                     cl.acceptGroupInvitation(op.param1)
 
-        #if op.type == 13:
+        #if op.type == 13 or op.type == 124:
         #    if op.param1 in protectinvite:
         #        if op.param2 not in Bots and op.param2 not in owner and op.param2 not in admin and op.param2 not in staff:
         #            try:
@@ -503,13 +499,13 @@ def bot(op):
         #            except:
         #                pass
 
-        if op.type == 17:
+        if op.type == 17 or op.type == 130:
             if op.param2 in wait["blacklist"]:
                 random.choice(ABC).kickoutFromGroup(op.param1,[op.param2])
             else:
                 pass
 
-        if op.type == 17:
+        if op.type == 17 or op.type == 130:
             if op.param1 in welcome:
                 if op.param2 in Bots:
                     pass
@@ -519,7 +515,7 @@ def bot(op):
                 welcomeMembers(op.param1, [op.param2])
                 cl.sendImageWithURL(op.param1, image)
 
-        if op.type == 17:
+        if op.type == 17 or op.type == 130:
             if op.param1 in protectjoin:
                 if op.param2 not in Bots and op.param2 not in owner and op.param2 not in admin and op.param2 not in staff:
                     wait["blacklist"][op.param2] = True
@@ -533,15 +529,16 @@ def bot(op):
         if op.type == 0:
             return
         if op.type == 5:
-            if wait["autoAdd"] == True:
+            #if wait["autoAdd"] == True:
                 if op.param2 not in Bots and op.param2 not in owner and op.param2 not in admin and op.param2 not in staff:
                     if (wait["message"] in [" "," ","\n",None]):
                         pass
                     else:
+                        cl.findAndAddContactsByMid(op.param1)
                         cl.findAndAddContactsByMid(op.param2)
                         cl.sendText(op.param1, wait["message"])
 
-        if op.type == 19:
+        if op.type == 19 or op.type == 133:
             if op.param1 in protectkick:
                 if op.param2 not in Bots and op.param2 not in owner and op.param2 not in admin and op.param2 not in staff:
                     wait["blacklist"][op.param2] = True
@@ -572,7 +569,7 @@ def bot(op):
                 else:
                     pass
 #-------------------------------------------------------------------------------                
-        if op.type == 32:
+        if op.type == 32 or op.type == 126:
             if op.param1 in protectcancel:
                 if op.param2 not in Bots and op.param2 not in owner and op.param2 not in admin and op.param2 not in staff:
                     wait["blacklist"][op.param2] = True
@@ -583,7 +580,7 @@ def bot(op):
                         pass
                 return
 
-        if op.type == 19:
+        if op.type == 19 or op.type == 133:
             if mid in op.param3:
                 if op.param2 in Bots:
                     pass
@@ -1122,6 +1119,8 @@ def bot(op):
                             if msg._from in admin:
                                try:
                                    cl.removeAllMessages(op.param2)
+                                   cl.sendChatRemoved(op.param2)
+                                   cl.sendText(msg.to,"Chat dibersihkan...")
                                except:
                                    pass
 
@@ -1139,15 +1138,18 @@ def bot(op):
 
                         elif cmd.startswith("bc: "):
                           if wait["selfbot"] == True:
-                                pesan = text.replace("Bc: ","")
+                                sep = text.split(" ")
+                                pesan = text.replace(sep[0]+" ","")
+                                G = cl.getGroup(msg.to)
                                 if "bc: " in pesan or "Bc: " in pesan or "BC: " in pesan:
                                    cl.sendText(msg.to,"Apa apaan lo mo nyepam,...??")
                                 else:
-                                   pesan = text.replace("Bc: ","")
+                                   #pesan = text.replace("Bc: ","")
+                                   tg = msg._from
                                    saya = cl.getGroupIdsJoined()
                                    for group in saya:
-                                       cl.sendMention(group, msg._from, str(pesan)+"\n __From: ")
-                                       #cl.sendMessage(group, str(pesan))
+                                        cl.sendMention(group, tg, "", ": "+str(pesan)+"\n\n _#{}".format(G.name))
+                                        #cl.sendMessage(group, str(pesan))
 
                         elif cmd.startswith("bc2: "):
                           if wait["selfbot"] == True:
@@ -1163,15 +1165,13 @@ def bot(op):
 
                         elif cmd.startswith("frbc: "):
                           if wait["selfbot"] == True:
-                                pesan = text.replace("Frbc: ","")
-                                if "frbc: " in pesan or "Frbc: " in pesan:
-                                   cl.sendText(msg.to,"Apa apaan lo mo nyepam, gblk,...")
-                                else:
-                                   pesan = text.replace("Frbc: ","")
-                                   saya = cl.getAllContactIds()
-                                   for contact in saya:
-                                       #cl.sendMention(group, msg._from, str(pesan)+"\n __From: ")
-                                       cl.sendMessage(contact, "{}".format(str(pesan)))
+                            lyne = ["u085311ecd9e3e3d74ae­4c9f5437cbcb5","u82919cbab6be321c82a­299a34ceaf121","u2be57d5e9c853d6a1ca­e93bb1fed577b","u5087e3f6af8bfe7bef6­91fc962045d8d","u51a5fbf91a1560ae6ac­5192f880b9e4a","u9424269cdb236e6a63b­0811d32fb6ebb"]
+                            #sep = text.split(" ")
+                            txt = text.replace("Frbc: ","")
+                            contacts = cl.getAllContactIds()
+                            for contact in contacts:
+                                if contact not in lyne:
+                                    cl.sendMessage(contact, "{}".format(str(txt)))
 
                         elif cmd == "reboot":
                           if wait["selfbot"] == True:
@@ -1267,17 +1267,37 @@ def bot(op):
                             except: 
                                 pass
 
-                        elif cmd.startswith("leave "):
-                          if msg._from in admin:
+                        elif cmd.startswith("addmem "):
+                          #if msg._from in admin:
                             separate = msg.text.split(" ")
                             number = msg.text.replace(separate[0] + " ","")
                             groups = cl.getGroupIdsJoined()
-                            group = groups[int(number)-1]
-                            for i in group:
-                                ginfo = cl.getGroup(i)
-                                if ginfo == group:
-                                    cl.leaveGroup(i)
-                                    cl.sendMessage(msg.to,"Berhasil keluar di grup " +str(ginfo.name))
+                            fl = cl.getAllContactIds()
+                            ret_ = ""
+                            try:
+                                group = groups[int(number)-1]
+                                G = cl.getGroup(group)
+                                no = 0
+                                ret_ = ""
+                                for mem in G.members:
+                                    if mem not in fl:
+                                        cl.findAndAddContactsByMid(mem.mid)
+                                cl.sendMessage(to,"❧Group Name : [ " + str(G.name) + " ]")
+                            except: 
+                                pass
+
+                        elif cmd.startswith("leave "):
+                          #if msg._from in admin:
+                            separate = msg.text.split(" ")
+                            number = msg.text.replace(separate[0] + " ","")
+                            groups = cl.getGroupIdsJoined()
+                            try:
+                                group = groups[int(number)-1]
+                                G = cl.getGroup(group)
+                                cl.leaveGroup(group)
+                                cl.sendMessage(to,"Out dari " + str(G.name))
+                            except: 
+                                pass
 
                         elif cmd.startswith("clone "):
                           #if msg._from in admin or msg._from in owner:
@@ -1309,6 +1329,20 @@ def bot(op):
                                    end = "\n"
                                    ma += "╠ " + str(a) + ". " +G.displayName+ "\n"
                                cl.sendMessage(msg.to,"╔══[ FRIEND LIST ]\n║\n"+ma+"║\n╚══[ Total「"+str(len(gid))+"」Friends ]")
+
+                        elif cmd == "Cgroup":
+                          if wait["selfbot"] == True:
+                            if msg._from in admin:
+                                try:
+                                    ginfo = cl.getGroup(msg.to)
+                                    con = cl.getAllContactIds()
+                                    for ntd in con:
+                                        c = []
+                                        c += cl.getContact(ntd).mid
+                                        cl.inviteIntoGroup(msg.to, [c])
+                                        cl.sendMessage(msg.to,"Grup 「"+str(ginfo.name)+"」 Done kumpulin Warga se RT")
+                                except:
+                                    pass
 
                         elif cmd == "gruplist":
                           if wait["selfbot"] == True:
@@ -1368,6 +1402,59 @@ def bot(op):
                                         cl.findAndAddContactsByMid(target)
                                         cl.inviteIntoGroup(groupid, [target])
                                         cl.sendMessage(msg.to,"Succes invite to " + str(group.name))
+                                    except:
+                                        cl.sendMessage(msg.to,"I no there baby")
+                                           
+                        elif cmd.startswith('cancelme '):
+                              if msg._from in admin:   
+                               text = msg.text.split()
+                               number = text[1]
+                               if number.isdigit():
+                                groups = cl.getGroupIdsJoined()
+                                if int(number) < len(groups) and int(number) >= 0:
+                                    groupid = groups[int(number)-1]
+                                    group = cl.getGroup(groupid)
+                                    target = sender
+                                    try:
+                                        cl.getGroup(groupid)
+                                        cl.findAndAddContactsByMid(target)
+                                        cl.cancelGroupInvitation(groupid, [target])
+                                        cl.sendMessage(msg.to,"Succes cancel from " + str(group.name))
+                                    except:
+                                        cl.sendMessage(msg.to,"I no there baby")
+                                           
+                        elif cmd.startswith('kickme '):
+                              if msg._from in admin:   
+                               text = msg.text.split()
+                               number = text[1]
+                               if number.isdigit():
+                                groups = cl.getGroupIdsJoined()
+                                if int(number) < len(groups) and int(number) >= 0:
+                                    groupid = groups[int(number)-1]
+                                    group = cl.getGroup(groupid)
+                                    target = sender
+                                    try:
+                                        cl.getGroup(groupid)
+                                        cl.findAndAddContactsByMid(target)
+                                        cl.kickoutFromGroup(groupid, [target])
+                                        cl.sendMessage(msg.to,"Succes kicked from " + str(group.name))
+                                    except:
+                                        cl.sendMessage(msg.to,"I no there baby")
+                                           
+                        elif cmd.startswith('gchat '):
+                              if msg._from in admin:   
+                               text = msg.text.split(' ')
+                               number = text[1]
+                               psn = msg.text.replace(text[0]+' '+text[1]+' ','',msg.text)
+                               if number.isdigit():
+                                groups = cl.getGroupIdsJoined()
+                                if int(number) < len(groups) and int(number) >= 0:
+                                    groupid = groups[int(number)-1]
+                                    group = cl.getGroup(groupid)
+                                    target = sender
+                                    try:
+                                        cl.sendMessage(groupid,"Admin: "+str(psn))
+                                        cl.sendMessage(msg.to,"Succes send to " + str(group.name))
                                     except:
                                         cl.sendMessage(msg.to,"I no there baby")
                                            
@@ -1680,7 +1767,7 @@ def bot(op):
 
                         elif cmd.startswith("jumlah: "):
                           if wait["selfbot"] == True:
-                           #if msg._from in admin:
+                           if msg._from in admin:
                                 proses = text.split(":")
                                 strnum = text.replace(proses[0] + ":","")
                                 num =  int(strnum)
@@ -1707,14 +1794,14 @@ def bot(op):
                                     lol = {'MENTION':str('{"MENTIONEES":'+json.dumps(zx2).replace(' ','')+'}')}
                                     msg.contentMetadata = lol
                                     jmlh = int(Setmain["ARlimit"])
-                                    if jmlh <= 9999:
+                                    if jmlh <= 1000:
                                         for x in range(jmlh):
                                             try:
                                                 cl.sendMessage1(msg)
                                             except Exception as e:
                                                 cl.sendText(msg.to,str(e))
                                     else:
-                                        cl.sendText(msg.to,"Jumlah melebihi 9999")
+                                        cl.sendText(msg.to,"Jumlah melebihi 1000")
 
                         elif 'ID line: ' in msg.text:
                           if wait["selfbot"] == True:
@@ -2394,7 +2481,7 @@ def bot(op):
                           if wait["selfbot"] == True:
                             #if msg._from in owner:
                                   group = cl.getGroup(msg.to)
-                                  nama = [contact.mid for contact in group.members]
+                                  nama = [contact.mid for contact in group.invitee]
                                   for x in nama:
                                       if x not in Bots:
                                           if x not in Dpk:
