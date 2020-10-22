@@ -6,7 +6,7 @@ cd storage && cd downloads
 
 pkg install git
 
-git clone https://github.com/tamin6606/Line-Publik-BOT
+git clone https://github.com/mbingsdk/Line-Publik-BOT
 
 pkg install nano
 
